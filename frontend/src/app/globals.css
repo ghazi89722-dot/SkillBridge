@@ -1,0 +1,317 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-input-text: var(--input-text);
+  --color-button-text: var(--button-text);
+  --color-error-text: var(--error-text);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+
+  /* Original references to keep compatibility where needed during migration */
+  --color-pine: var(--pine);
+  --color-slate: var(--slate);
+  --color-ochre: var(--ochre);
+  --color-rust: var(--rust);
+  --color-mist: var(--mist);
+  --color-ink: var(--ink);
+
+  /* Medical / Healthcare accents */
+  --color-medical: var(--medical);
+  --color-medical-light: var(--medical-light);
+  --color-medical-surface: var(--medical-surface);
+}
+
+:root {
+  /* Original colors */
+  --bg-porcelain: #F7F6F2;
+  --ink: #1D2420;
+  --pine: #21463D;
+  --slate: #3C4A66;
+  --ochre: #B9863C;
+  --rust: #A85338;
+  --mist: #E4E8E2;
+
+  /* Medical accent colors */
+  --medical: #7C5CBF;
+  --medical-light: #A78BDB;
+  --medical-surface: rgba(124, 92, 191, 0.06);
+
+  /* Semantic Variables (Light Mode) */
+  --background: var(--bg-porcelain);
+  --surface: #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --border: var(--mist);
+  --text-primary: var(--ink);
+  --text-secondary: var(--slate);
+  --text-muted: #6b7280;
+  --input-text: var(--ink);
+  --button-text: #FFFFFF;
+  --error-text: var(--rust);
+  --primary: var(--pine);
+  --secondary: var(--ochre);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(33, 70, 61, 0.07);
+  --shadow-card-hover: 0 8px 40px rgba(33, 70, 61, 0.12);
+  --shadow-hero: 0 25px 80px rgba(33, 70, 61, 0.10);
+  --shadow-elevated: 0 12px 48px rgba(33, 70, 61, 0.09);
+}
+
+:root[data-theme="dark"] {
+  /* Original Dark Colors */
+  --bg-porcelain: #111916;
+  --ink: #edf3ef;
+  --pine: #8fc8b5;
+  --slate: #b7c5c0;
+  --ochre: #e0b66d;
+  --rust: #e58b6d;
+  --mist: #33443e;
+
+  /* Medical Dark accent */
+  --medical: #B89EE0;
+  --medical-light: #C9B4E8;
+  --medical-surface: rgba(184, 158, 224, 0.08);
+
+  /* Semantic Variables (Dark Mode) */
+  --background: var(--bg-porcelain);
+  --surface: #1b2723;
+  --surface-elevated: #233330;
+  --border: var(--mist);
+  --text-primary: var(--ink);
+  --text-secondary: var(--slate);
+  --text-muted: #9ca3af;
+  --input-text: var(--ink);
+  --button-text: #10231d;
+  --error-text: var(--rust);
+  --primary: var(--pine);
+  --secondary: var(--ochre);
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.35);
+  --shadow-hero: 0 25px 80px rgba(0, 0, 0, 0.30);
+  --shadow-elevated: 0 12px 48px rgba(0, 0, 0, 0.30);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+/* Ensure inputs in dark mode correctly apply background and text color without needing dark mode specific classes */
+input, select, textarea {
+  color: var(--input-text);
+  background-color: transparent;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+}
+
+/* ========================================
+   SCROLL ANIMATIONS
+   ======================================== */
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes drawLine {
+  from {
+    stroke-dashoffset: 200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+}
+
+@keyframes countUp {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   PREFERS REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========================================
+   GLASSMORPHISM UTILITIES
+   ======================================== */
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+:root[data-theme="dark"] .glass {
+  background: rgba(27, 39, 35, 0.75);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(228, 232, 226, 0.5);
+  box-shadow: var(--shadow-card);
+}
+
+:root[data-theme="dark"] .glass-card {
+  background: rgba(27, 39, 35, 0.5);
+  border-color: rgba(51, 68, 62, 0.5);
+}
+
+/* ========================================
+   BACKGROUND STORYTELLING
+   ======================================== */
+
+.bg-dots {
+  background-image: radial-gradient(circle, var(--mist) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+:root[data-theme="dark"] .bg-dots {
+  background-image: radial-gradient(circle, rgba(143, 200, 181, 0.06) 1px, transparent 1px);
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(33, 70, 61, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 70, 61, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+:root[data-theme="dark"] .bg-grid {
+  background-image:
+    linear-gradient(rgba(143, 200, 181, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 200, 181, 0.04) 1px, transparent 1px);
+}
+
+/* ========================================
+   LANDING PAGE SECTION HELPERS
+   ======================================== */
+
+.section-gradient-top {
+  background: radial-gradient(circle at top, rgba(33, 70, 61, 0.08), transparent 50%);
+}
+
+:root[data-theme="dark"] .section-gradient-top {
+  background: radial-gradient(circle at top, rgba(143, 200, 181, 0.05), transparent 50%);
+}
+
+.section-gradient-medical {
+  background: radial-gradient(circle at 70% 30%, rgba(124, 92, 191, 0.06), transparent 50%);
+}
+
+:root[data-theme="dark"] .section-gradient-medical {
+  background: radial-gradient(circle at 70% 30%, rgba(184, 158, 224, 0.04), transparent 50%);
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mist);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--slate);
+}
