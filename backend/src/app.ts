@@ -15,9 +15,20 @@ app.set('trust proxy', 1);
   app.use(helmet());
 
   // CORS configuration
+  const allowedOrigins = env.FRONTEND_URL.split(',').map((u) => u.trim());
   app.use(
     cors({
-      origin: env.FRONTEND_URL,
+      origin: (origin, callback) => {
+        // Allow requests with no origin (e.g., server-to-server, health checks)
+        if (!origin) return callback(null, true);
+        if (
+          allowedOrigins.includes(origin) ||
+          (env.NODE_ENV === 'development' && origin.startsWith('http://localhost'))
+        ) {
+          return callback(null, true);
+        }
+        callback(new Error('Not allowed by CORS'));
+      },
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization'],

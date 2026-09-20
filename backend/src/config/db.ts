@@ -1,14 +1,21 @@
 import mongoose from 'mongoose';
 import { env } from './env';
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import Domain from '../models/Domain';
 import { seedInitialDomains } from '../seeds/initialDomains';
 import { seedInitialOpportunities } from '../seeds/initialOpportunities';
 import { seedCareerRoles } from '../seeds/careerRoles';
 
 const seedDomainsIfEmpty = async (): Promise<void> => {
+  const domainCount = await Domain.countDocuments();
+  if (domainCount >= 2) {
+    console.log('✅ Seed data already exists, skipping seed.');
+    return;
+  }
+  console.log('🌱 Seeding initial data...');
   await seedInitialDomains();
   await seedCareerRoles();
   await seedInitialOpportunities();
+  console.log('✅ Seed complete.');
 };
 
 export const connectDB = async (): Promise<void> => {
@@ -26,16 +33,10 @@ export const connectDB = async (): Promise<void> => {
     });
 
   } catch (error: any) {
-    console.warn(`⚠️  MongoDB connection failed (${error.message}). Falling back to in-memory database...`);
-    try {
-      const mongod = await MongoMemoryServer.create();
-      const uri = mongod.getUri();
-      const conn = await mongoose.connect(uri);
-      console.log(`✅ In-Memory MongoDB Connected: ${conn.connection.host}`);
-      await seedDomainsIfEmpty();
-    } catch (fallbackError) {
-      console.error('❌ In-Memory MongoDB fallback also failed:', fallbackError);
-      process.exit(1);
-    }
+    console.error(`❌ MongoDB connection failed: ${error.message}`);
+    console.error('Please ensure MONGODB_URI in your .env points to a running, persistent MongoDB instance.');
+    console.error('Example: MONGODB_URI=mongodb://localhost:27017/skillbridge');
+    process.exit(1);
   }
 };
+
