@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/context/AuthContext';
+import axios from 'axios';
 import api from '@/lib/api';
 
 export default function NewOpportunityPage() {
@@ -81,6 +82,12 @@ export default function NewOpportunityPage() {
       alert("Please require at least one skill.");
       return;
     }
+
+    // Client-side description length validation
+    if (formData.description.trim().length < 10) {
+      alert("Invalid Description: Job description must be at least 10 characters long.");
+      return;
+    }
     
     setSubmitting(true);
     try {
@@ -91,8 +98,27 @@ export default function NewOpportunityPage() {
         requiredSkills: selectedSkills,
       });
       router.push('/industry/dashboard');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to create opportunity", error);
+
+      // Check for backend VALIDATION_ERROR with description too_small
+      if (axios.isAxiosError(error)) {
+        const errBody = error.response?.data?.error;
+        if (
+          errBody?.code === 'VALIDATION_ERROR' &&
+          Array.isArray(errBody.details) &&
+          errBody.details.some(
+            (d: Record<string, unknown>) =>
+              d.code === 'too_small' &&
+              Array.isArray(d.path) &&
+              d.path.includes('description')
+          )
+        ) {
+          alert("Invalid Description: Job description must be at least 10 characters long.");
+          return;
+        }
+      }
+
       alert("Failed to post opportunity");
     } finally {
       setSubmitting(false);
